@@ -1,4 +1,4 @@
-import pickle
+import json
 import os
 
 os.system("clear")
@@ -9,30 +9,31 @@ def space():
     print(" ")
     print(" ")
 
+def line_space():
+    print("----")
 space()
 userlist = []
-filename = "userdata.p"
 
 def maininput():
-    loaded_uinput = []
     while True:
         #Selecting if user wants to read or write the list, and or exit
         init_conf = input("Would you like to read or write your list? (read | write | exit)")
-        #Printing the list
-        if init_conf == "read":
-            pickle_in = open(filename, "rb")
-            loaded_uinput = pickle.load(pickle_in, encoding='bytes')
-            pickle_in.close()
-            print(*loaded_uinput, sep="\n")
         #Customizing the list
-        elif init_conf == "write":
+        if init_conf == "write":
             uinput = input("What would you like to add to your list?")
-            userlist.append("----")
-            userlist.append("-" + uinput)
-            pickle_out = open(filename, "wb")
-            pickle.dump(userlist, pickle_out)
-            pickle_out.close()
-            print(*userlist, sep="\n")
+            userlist.append(uinput)
+            with open("userdata.json", "w") as write_file:
+                json.dump(userlist, write_file)
+
+         #Printing the list
+        elif init_conf == "read":
+            with open("userdata.json", "r") as read_file:
+                data = json.load(read_file)
+            for todo in data:
+                line_space()
+                print(todo)
+                line_space()
+                
         elif init_conf == "exit":
             break
 
